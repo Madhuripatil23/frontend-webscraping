@@ -1,112 +1,71 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* styles.css */
-
-body, html {
+/* Full height base */
+html, body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  padding: 0;
   height: 100%;
+  font-family: Arial, sans-serif;
   background-color: #f7f7f7;
   color: #222;
+  overflow: hidden; /* Prevent default scroll */
 }
 
+/* Container that splits sidebar + main pane */
 .app-container {
   display: flex;
   height: 100vh;
-}
-
-/* Sidebar styles */
-.sidebar {
-  width: 250px;
-  background-color: #fff;
-  padding: 16px;
-  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+  overflow: hidden;
   overflow-y: auto;
 }
 
-.sidebar-title {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 16px;
+/* Sidebar - only this scrolls */
+.sidebar {
+  width: 300px;
+  height: 100vh;
+  background-color: #ffffff;
+  padding: 20px;
+  overflow-y: scroll; /* still scrollable */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  border-right: 1px solid #ddd;
+  box-sizing: border-box;
 }
 
+/* Chrome, Edge, Safari */
+.sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Content inside sidebar to test scrolling */
 .company-details {
-  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  padding: 8px;
   border-radius: 6px;
-  margin-bottom: 10px;
-  padding: 4px;
-  background: #fafafa;
+  background-color: #fafafa;
 }
 
 .company-name {
+  /* font-weight: ; */
   cursor: pointer;
-  font-weight: 500;
-  padding: 4px;
 }
 
 .year-list {
   list-style: none;
-  padding-left: 20px;
-  margin-bottom: 6px;
+  padding-left: 15px;
 }
 
-.link {
-  color: #2563eb;
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-/* Main pane */
+/* Main content (not scrollable) */
 .main-pane {
   flex: 1;
-  padding: 24px;
-  overflow-y: auto;
+  padding: 30px;
   background-color: #f0f2f5;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
+
 .main-title {
-  font-size: 24px;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 16px;
 }
@@ -123,44 +82,68 @@ body, html {
   color: white;
   font-weight: bold;
   display: inline-block;
+  border: none;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.15);
 }
 
 .btn.blue {
-  background-color: #2563eb;
+  background-color: #007bff;
 }
 
 .btn.green {
-  background-color: #059669;
+  background-color: #28a745;
 }
 
-/* Summary styles */
+/* Summary */
 .summary-box {
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0px 2px 6px rgba(0,0,0,0.1);
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+  margin: 10px;
 }
 
 .summary-title {
+  font-size: 1.2rem;
   font-weight: bold;
-  font-size: 18px;
-  margin-top: 12px;
-  margin-bottom: 6px;
+  margin-top: 20px;
+  margin-bottom: 8px;
 }
 
-.summary-list {
-  list-style: disc;
-  padding-left: 20px;
-  font-size: 14px;
+.sub-title {
+  font-weight: 400;
+  margin-top: 10px;
+}
+
+.text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-line;
 }
 
 .text-muted {
-  color: #777;
+  color: #666;
   padding: 20px;
 }
 
 .error-text {
   color: #dc2626;
   font-weight: bold;
+}
+
+.year-list li {
+  margin-top: 15px;
+  margin-bottom: 15px; /* adds vertical spacing */
+}
+
+.year-list li .link {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.year-list li .link:hover {
+  background-color: #e0e0e0;
+  text-decoration: none;
 }
