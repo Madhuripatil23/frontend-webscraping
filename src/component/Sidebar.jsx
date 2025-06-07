@@ -53,8 +53,8 @@ function Sidebar({ tree, onSelectPeriod }) {
 
       {message && <div className={`alert ${message.type}`}>{message.text}</div>}
 
-      <h2 className="sidebar-title">Companies</h2>
-
+      <h2 className="summary-title">Companies</h2>
+      <br />
       {isEmpty ? (
         <p className="text-muted">No companies to display.</p>
       ) : (

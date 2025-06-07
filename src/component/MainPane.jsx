@@ -67,7 +67,6 @@ const handleDownload = async (reportId, type) => {
         {company} — {ym.replace("_", " / ")}
       </h2>
       <br />
-      
       <div className="download-links">
         <button
           onClick={() => handleDownload(reportId, "ppt")}
