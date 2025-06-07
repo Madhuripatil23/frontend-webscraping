@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import "./Table.css";
 
 const formatValue = (value) => {
   if (typeof value === "number") {

@@ -62,9 +62,12 @@ const handleDownload = async (reportId, type) => {
 
   return (
     <main className="main-pane">
-      <h2 className="main-title">
+      <div className="summary-box">
+      <h2 className="summary-title">
         {company} — {ym.replace("_", " / ")}
       </h2>
+      <br />
+      
       <div className="download-links">
         <button
           onClick={() => handleDownload(reportId, "ppt")}
@@ -78,6 +81,7 @@ const handleDownload = async (reportId, type) => {
         >
           Download Transcript
         </button>
+      </div>
       </div>
       <ReportSummary reportId={reportId} />
     </main>
