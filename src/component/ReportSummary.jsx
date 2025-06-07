@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MetadataSection from './MetadataSection';
 import DataExteactionSection from './DataExtractionSection';
+import FinancialReport from './FinancialReport';
 
 function ReportSummary({ reportId }) {
   const [summary, setSummary] = useState(null);
@@ -49,11 +50,12 @@ function ReportSummary({ reportId }) {
     //   <p>{analysis.segment_geographic_deep_dive || 'No summary available'}</p>
     // </div>
     <div className="summary-box">
-      <h1>Financial Report </h1>
+      <FinancialReport data={summary} />
+      {/* <h1>Financial Report </h1>
       <MetadataSection data={metadata} />
       <br />
       <DataExteactionSection data={data_extraction} finData={financial_analysis} />
-      {/* <FinancialAnalysisSection data={financial_analysis} /> */}
+      <FinancialAnalysisSection data={financial_analysis} /> */}
     </div>
   );
 }
