@@ -14,29 +14,28 @@ function FinancialReport({ data }) {
   const formatCurrency = (val, symbol = "₹") =>
     val == null ? "–" : symbol + formatNumber(val);
 
-
   const renderMetadata = () => (
     <div>
-    <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
-      <h2 className="summary-title">Metadata</h2>
-       <br />
-      <div className="metadata-row">
-        <span className="metadata-label">Company:</span>
-        <span className="metadata-value">{metadata.company}</span>
-      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Metadata</h2>
+        <br />
+        <div className="metadata-row">
+          <span className="metadata-label">Company:</span>
+          <span className="metadata-value">{metadata.company}</span>
+        </div>
 
-      <div className="metadata-row">
-        <span className="metadata-label">Generated On:</span>
-        <span className="metadata-value">{metadata.report_generated_on}</span>
-      </div>
+        <div className="metadata-row">
+          <span className="metadata-label">Generated On:</span>
+          <span className="metadata-value">{metadata.report_generated_on}</span>
+        </div>
 
-      <div className="metadata-row">
-        <span className="metadata-label">Currency Symbols:</span>
-        <span className="metadata-value">
-          INR ({metadata.base_currency.inr}) | USD ({metadata.base_currency.usd}
-          )
-        </span>
-      </div>
+        <div className="metadata-row">
+          <span className="metadata-label">Currency Symbols:</span>
+          <span className="metadata-value">
+            INR ({metadata.base_currency.inr}) | USD (
+            {metadata.base_currency.usd})
+          </span>
+        </div>
       </div>
       <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
         <h3 className="summary-title">Source Documents</h3>
@@ -52,17 +51,18 @@ function FinancialReport({ data }) {
         </ul>
       </div>
     </div>
-
   );
 
   const renderPeriodPane = (label, period, isQuarter) => {
     const revenue = period.revenue || {};
     const profitability = period.profitability || {};
     const cash = period.cash_flow_balance_sheet || {};
+    const segment = period.segment_performance || {};
+    const geographic = period.geographic_performance || {};
     const orderBook = period.order_book || {};
     const headcount = period.headcount_metrics || {};
     const dividend = period.dividend || {};
-
+    console.log(segment);
     return (
       <Tabs label={label}>
         <Tabs.Panel title="Revenue">
@@ -156,6 +156,40 @@ function FinancialReport({ data }) {
           />
         </Tabs.Panel>
 
+        <Tabs.Panel title="Segment Performance">
+          <Table
+            headers={
+              isQuarter
+                ? ["Segment", "Revenue INR", "Growth QoQ %"]
+                : ["Segment", "Revenue INR", "Growth YoY %"]
+            }
+            rows={segment.map((seg) => [
+              seg.segment,
+              formatCurrency(seg.revenue_inr, "$"),
+              isQuarter
+                ? formatPercent(seg.growth_pct_qoq)
+                : formatPercent(seg.growth_pct_yoy),
+            ])}
+          />
+        </Tabs.Panel>
+
+        <Tabs.Panel title="Geographic Performance">
+          <Table
+            headers={
+              isQuarter
+                ? ["Region", "Revenue INR", "Growth QoQ %"]
+                : ["Region", "Revenue INR", "Growth YoY %"]
+            }
+            rows={geographic.map((seg) => [
+              seg.region,
+              formatCurrency(seg.revenue_inr, "$"),
+              isQuarter
+                ? formatPercent(seg.growth_pct_qoq)
+                : formatPercent(seg.growth_pct_yoy),
+            ])}
+          />
+        </Tabs.Panel>
+
         <Tabs.Panel title="Headcount">
           <Table
             rows={[
@@ -189,7 +223,7 @@ function FinancialReport({ data }) {
 
   const renderCommentary = () => (
     <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
-      <h2 className="summary-title">Commentary</h2>
+      <h2 className="summary-title">Financial Summary</h2>
       <p className="text-sm">{financial_analysis.performance_summary}</p>
       <p className="text-sm font-semibold">Trend Analysis (Quarter):</p>
       <p className="text-sm">
@@ -204,6 +238,43 @@ function FinancialReport({ data }) {
     </div>
   );
 
+  const renderMiscellaneous = () => (
+    <>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Segment Geographic Deep Dive</h2>
+        <p className="text-sm">
+          {financial_analysis.segment_geographic_deep_dive}
+        </p>
+      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Deal Wins Pipeline Quality</h2>
+        <p className="text-sm">
+          {financial_analysis.deal_wins_pipeline_quality}
+        </p>
+      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Management Commentary Outlook</h2>
+        <p className="text-sm">
+          {financial_analysis.management_commentary_outlook}
+        </p>
+      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Comparison to Expectations</h2>
+        <p className="text-sm">
+          {financial_analysis.comparison_to_expectations}
+        </p>
+      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Key Risks Headwinds</h2>
+        <p className="text-sm">{financial_analysis.key_risks_headwinds}</p>
+      </div>
+      <div className="summary-box space-y-4 bg-white rounded p-4 shadow">
+        <h2 className="summary-title">Operational Efficiency</h2>
+        <p className="text-sm">{financial_analysis.operational_efficiency}</p>
+      </div>
+    </>
+  );
+
   return (
     <div>
       {renderMetadata()}
@@ -214,6 +285,7 @@ function FinancialReport({ data }) {
       )}
       {renderPeriodPane("Full Year – FY25", data_extraction.current_fy, false)}
       {renderCommentary()}
+      {renderMiscellaneous()}
     </div>
   );
 }
