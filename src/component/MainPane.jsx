@@ -1,5 +1,6 @@
 import React from "react";
 import ReportSummary from "./ReportSummary";
+import { API_BASE_URL } from '../Api.js';
 
 const MainPane = ({ selected }) => {
   if (!selected) {
@@ -17,7 +18,7 @@ const handleDownload = async (reportId, type) => {
     if (!reportId || !type) throw new Error("Missing reportId or type");
 
     const response = await fetch(
-      `http://localhost:5090/api/scrapper/download?userId=${userId}&reportId=${encodeURIComponent(reportId)}&type=${type}`,
+      `${API_BASE_URL}/download?userId=${userId}&reportId=${encodeURIComponent(reportId)}&type=${type}`,
       {
         method: "GET",
       }
