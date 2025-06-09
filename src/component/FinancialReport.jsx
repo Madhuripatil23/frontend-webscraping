@@ -62,7 +62,7 @@ function FinancialReport({ data }) {
     const orderBook = period.order_book || {};
     const headcount = period.headcount_metrics || {};
     const dividend = period.dividend || {};
-    console.log(segment);
+
     return (
       <Tabs label={label}>
         <Tabs.Panel title="Revenue">

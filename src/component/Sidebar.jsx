@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE_URL } from '../Api.js';
 
 function Sidebar({ tree, onSelectPeriod }) {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -9,7 +10,7 @@ function Sidebar({ tree, onSelectPeriod }) {
     setIsGenerating(true);
     setMessage(null);
     try {
-      const response = await fetch(`http://localhost:5090/api/scrapper/run?userId=${encodeURIComponent(userId)}`, {
+      const response = await fetch(`${API_BASE_URL}/run?userId=${encodeURIComponent(userId)}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });

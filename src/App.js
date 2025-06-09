@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import MainPane from "./component/MainPane";
 import Sidebar from "./component/Sidebar";
 import "./App.css";
+import "./component/Style.css";
+import { API_BASE_URL } from './Api.js';
 
 export default function App() {
   const [tree, setTree] = useState(null);        // Company tree data
@@ -11,7 +13,7 @@ export default function App() {
   const userId =   sessionStorage.getItem("userId") || 2;
 
   useEffect(() => {
-    fetch(`http://localhost:5090/api/scrapper/company/tree?userId=${userId}`)
+    fetch(`${API_BASE_URL}/company/tree?userId=${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
         return res.json();
