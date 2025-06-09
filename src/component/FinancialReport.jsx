@@ -174,7 +174,7 @@ function FinancialReport({ data }) {
         </Tabs.Panel>
 
         <Tabs.Panel title="Geographic Performance">
-          <Table
+          {/* <Table
             headers={
               isQuarter
                 ? ["Region", "Revenue INR", "Growth QoQ %"]
@@ -187,7 +187,17 @@ function FinancialReport({ data }) {
                 ? formatPercent(seg.growth_pct_qoq)
                 : formatPercent(seg.growth_pct_yoy),
             ])}
+          /> */}
+
+          <Table
+            data={geographic}
+            headers={
+              isQuarter
+                ? ["Region", "Revenue INR", "Growth QoQ %"]
+                : ["Region", "Revenue INR", "Growth YoY %"]
+            }
           />
+
         </Tabs.Panel>
 
         <Tabs.Panel title="Headcount">

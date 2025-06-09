@@ -1,92 +1,90 @@
 import React, { useState } from "react";
 
-const formatValue = (value) => {
-  if (typeof value === "number") {
-    return value.toLocaleString();
-  }
-  if (typeof value === "string") {
-    if (/^\d+(\.\d+)?%$/.test(value)) return value; // already percentage
-    if (/^\$?\d+(\.\d+)?$/.test(value)) return value; // currency or plain number
-    if (value.includes("%")) return value;
-    if (!isNaN(Number(value))) return Number(value).toLocaleString();
-  }
-  return value;
-};
+const formatValue = (v) =>
+  typeof v === "number" ? v.toLocaleString() : v ?? "-";
 
-const Table = ({ data = [], headers = null, rows = null }) => {
+const Table = ({ data = null, headers = null, rows = null }) => {
   const [sortConfig, setSortConfig] = useState(null);
 
-  if ((!Array.isArray(data) || data.length === 0) && !rows) {
-    return <p className="table-error">No data available</p>;
+  const hasData = Array.isArray(data) && data.length > 0;
+
+  const finalHeaders = headers || (hasData ? Object.keys(data[0]) : null);
+  const finalRows = rows || (hasData ? data.map((d) => Object.values(d)) : null);
+
+  const noHeaders = !finalHeaders;
+  const noRows = !finalRows || finalRows.length === 0;
+
+  if (noHeaders && noRows) {
+    return <p>No data available</p>;
   }
 
-  let finalHeaders = headers;
-  let finalRows = rows;
+  // Only sort if rows exist
+  const sortedRows =
+    !noHeaders && !noRows && sortConfig
+      ? [...finalRows].sort((a, b) => {
+          const i = sortConfig.index;
+          const dir = sortConfig.direction === "asc" ? 1 : -1;
+          const aVal = a[i];
+          const bVal = b[i];
+          const aStr = aVal != null ? aVal.toString() : "";
+          const bStr = bVal != null ? bVal.toString() : "";
+          const aNum = parseFloat(aStr.replace(/[^\d.-]/g, ""));
+          const bNum = parseFloat(bStr.replace(/[^\d.-]/g, ""));
+          if (!isNaN(aNum) && !isNaN(bNum)) return dir * (aNum - bNum);
+          return dir * aStr.localeCompare(bStr);
+        })
+      : finalRows;
 
-  if (data && !headers && !rows) {
-    finalHeaders = Object.keys(data[0]);
-    finalRows = data.map((row) => finalHeaders.map((key) => row[key]));
-  }
-
-  const sortedRows = () => {
-    if (!sortConfig || !finalHeaders) return finalRows;
-    const { index, direction } = sortConfig;
-    return [...finalRows].sort((a, b) => {
-      const valA = a[index];
-      const valB = b[index];
-
-      const numA = parseFloat(valA?.toString().replace(/[^\d.-]/g, ''));
-      const numB = parseFloat(valB?.toString().replace(/[^\d.-]/g, ''));
-
-      if (!isNaN(numA) && !isNaN(numB)) {
-        return direction === "asc" ? numA - numB : numB - numA;
-      }
-      return direction === "asc"
-        ? valA?.toString().localeCompare(valB)
-        : valB?.toString().localeCompare(valA);
-    });
-  };
-
-  const handleSort = (index) => {
-    if (
-      sortConfig &&
-      sortConfig.index === index &&
-      sortConfig.direction === "asc"
-    ) {
-      setSortConfig({ index, direction: "desc" });
-    } else {
-      setSortConfig({ index, direction: "asc" });
-    }
+  const onSort = (index) => {
+    if (noHeaders || noRows) return;
+    setSortConfig((current) =>
+      current && current.index === index && current.direction === "asc"
+        ? { index, direction: "desc" }
+        : { index, direction: "asc" }
+    );
   };
 
   return (
-    <table className="custom-table">
+    <table>
       {finalHeaders && (
         <thead>
           <tr>
-            {finalHeaders.map((header, idx) => (
+            {finalHeaders.map((h, i) => (
               <th
-                key={idx}
-                onClick={() => handleSort(idx)}
-                className="sortable"
+                key={i}
+                onClick={() => onSort(i)}
+                style={{ cursor: noRows ? "default" : "pointer" }}
               >
-                {header}
-                {sortConfig?.index === idx && (
-                  <span>{sortConfig.direction === "asc" ? " ▲" : " ▼"}</span>
-                )}
+                {h}
+                {!noRows && sortConfig?.index === i
+                  ? sortConfig.direction === "asc"
+                    ? " ▲"
+                    : " ▼"
+                  : ""}
               </th>
             ))}
           </tr>
         </thead>
       )}
       <tbody>
-        {sortedRows().map((row, i) => (
-          <tr key={i}>
-            {row.map((cell, j) => (
-              <td key={j}>{formatValue(cell)}</td>
-            ))}
+        {noRows ? (
+          <tr>
+            <td
+              colSpan={finalHeaders?.length || 1}
+              style={{ textAlign: "center" }}
+            >
+              No data available
+            </td>
           </tr>
-        ))}
+        ) : (
+          sortedRows.map((row, i) => (
+            <tr key={i}>
+              {row.map((cell, j) => (
+                <td key={j}>{formatValue(cell)}</td>
+              ))}
+            </tr>
+          ))
+        )}
       </tbody>
     </table>
   );
